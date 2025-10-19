@@ -5,12 +5,12 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Separator } from "@/components/ui/separator"
+import { Button } from "@/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/ui/card"
+import { Input } from "@/ui/input"
+import { Label } from "@/ui/label"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs"
+import { Separator } from "@/ui/separator"
 import { User, Mail, Phone, Save } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { createClient } from "@/lib/supabase/client"
@@ -109,7 +109,6 @@ export default function AccountPage() {
         <div className="container px-4 py-16">
           <div className="text-center">Loading account...</div>
         </div>
-        <Footer />
       </div>
     )
   }
@@ -257,7 +256,7 @@ export default function AccountPage() {
         </div>
       </main>
 
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )
 }

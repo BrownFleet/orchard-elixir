@@ -166,14 +166,24 @@
       rgba(212, 175, 55, 0.1);
   }
 
-  .royal-gradient-text {
-    background: linear-gradient(135deg, #d4af37 0%, #f7e7ce 20%, #d4af37 40%, #b8860b 60%, #9a7c0a 80%, #d4af37 100%);
-    background-size: 200% 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: shimmer-text 3s ease-in-out infinite;
-  }
+.royal-gradient-text {
+  background: linear-gradient(
+    135deg,
+    #d4af37 0%,
+    #d4af37 15%,
+    #f7e7ce 35%,
+    #d4af37 50%,
+    #b8860b 65%,
+    #d4af37 85%,
+    #d4af37 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: none;
+  animation: shimmer-text 3s ease-in-out infinite;
+}
 
   .royal-gradient-bg {
     background: linear-gradient(135deg, #d4af37 0%, #f7e7ce 25%, #d4af37 50%, #b8860b 75%, #9a7c0a 100%);
@@ -280,7 +290,7 @@
   }
 
   .glass-button:hover {
-    background: rgba(212, 175, 55, 0.15);
+    /* background: rgba(212, 175, 55, 0.15); */
     border-color: rgba(212, 175, 55, 0.5);
     transform: translateY(-2px);
     box-shadow: 0 12px 40px rgba(212, 175, 55, 0.3), 0 6px 20px rgba(0, 0, 0, 0.15), inset 0 1px 0

@@ -2,9 +2,9 @@
 
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
+import { Button } from "@/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card"
+import { Separator } from "@/ui/separator"
 import { Plus, Minus, X, ShoppingBag, ArrowLeft } from "lucide-react"
 import { useCart } from "@/hooks/use-cart"
 import Link from "next/link"
@@ -36,7 +36,6 @@ export default function CartPage() {
         <div className="container px-4 py-16">
           <div className="text-center">Loading cart...</div>
         </div>
-        <Footer />
       </div>
     )
   }

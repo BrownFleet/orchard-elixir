@@ -1,52 +1,81 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import { Slider } from "@/components/ui/slider"
-import { Badge } from "@/components/ui/badge"
-import { X } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Button } from "@/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
+import { Checkbox } from "@/ui/checkbox";
+import { Label } from "@/ui/label";
+import { Slider } from "@/ui/slider";
+import { Badge } from "@/ui/badge";
+import { X } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 interface ProductFiltersProps {
-  onFiltersChange: (filters: FilterState) => void
+  onFiltersChange: (filters: FilterState) => void;
+  initialCategories?: number[];
 }
 
 export interface FilterState {
-  categories: string[]
-  priceRange: [number, number]
-  inStock: boolean
-  featured: boolean
+  categories: number[];
+  priceRange: [number, number];
+  inStock: boolean;
+  featured: boolean;
 }
 
-const categories = [
-  { id: "essential_oils", label: "Essential Oils", count: 25 },
-  { id: "herbs", label: "Premium Herbs", count: 15 },
-  { id: "blends", label: "Signature Blends", count: 10 },
-]
+interface Category {
+  id: number;
+  name: string;
+  count: string;
+}
 
-export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
+export function ProductFilters({
+  onFiltersChange,
+  initialCategories = [],
+}: ProductFiltersProps) {
   const [filters, setFilters] = useState<FilterState>({
-    categories: [],
+    categories: initialCategories,
     priceRange: [0, 100],
     inStock: false,
     featured: false,
-  })
+  });
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("categories")
+        .select("id, name, count")
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching categories:", error);
+      } else {
+        setCategories(data || []);
+      }
+      setLoading(false);
+    }
+    fetchCategories();
+  }, []);
+
+  // useEffect(() => {
+  //   onFiltersChange(filters);
+  // }, [filters, onFiltersChange]);
 
   const updateFilters = (newFilters: Partial<FilterState>) => {
-    const updated = { ...filters, ...newFilters }
-    setFilters(updated)
-    onFiltersChange(updated)
-  }
+    const updated = { ...filters, ...newFilters };
+    setFilters(updated);
+    onFiltersChange(updated);
+  };
 
-  const handleCategoryChange = (categoryId: string, checked: boolean) => {
+  const handleCategoryChange = (categoryId: number, checked: boolean) => {
     const newCategories = checked
       ? [...filters.categories, categoryId]
-      : filters.categories.filter((id) => id !== categoryId)
+      : filters.categories.filter((id) => id !== categoryId);
 
-    updateFilters({ categories: newCategories })
-  }
+    updateFilters({ categories: newCategories });
+  };
 
   const clearFilters = () => {
     const clearedFilters: FilterState = {
@@ -54,17 +83,21 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
       priceRange: [0, 100],
       inStock: false,
       featured: false,
-    }
-    setFilters(clearedFilters)
-    onFiltersChange(clearedFilters)
-  }
+    };
+    setFilters(clearedFilters);
+    onFiltersChange(clearedFilters);
+  };
 
   const hasActiveFilters =
     filters.categories.length > 0 ||
     filters.priceRange[0] > 0 ||
     filters.priceRange[1] < 100 ||
     filters.inStock ||
-    filters.featured
+    filters.featured;
+
+  if (loading) {
+    return <div className="text-center">Loading filters...</div>;
+  }
 
   return (
     <Card className="sticky top-24">
@@ -88,12 +121,17 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
             {categories.map((category) => (
               <div key={category.id} className="flex items-center space-x-2">
                 <Checkbox
-                  id={category.id}
+                  id={`category-${category.id}`}
                   checked={filters.categories.includes(category.id)}
-                  onCheckedChange={(checked) => handleCategoryChange(category.id, checked as boolean)}
+                  onCheckedChange={(checked) =>
+                    handleCategoryChange(category.id, checked as boolean)
+                  }
                 />
-                <Label htmlFor={category.id} className="text-sm font-normal cursor-pointer flex-1">
-                  {category.label}
+                <Label
+                  htmlFor={`category-${category.id}`}
+                  className="text-sm font-normal cursor-pointer flex-1"
+                >
+                  {category.name}
                 </Label>
                 <Badge variant="secondary" className="text-xs">
                   {category.count}
@@ -109,7 +147,9 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
           <div className="px-2">
             <Slider
               value={filters.priceRange}
-              onValueChange={(value) => updateFilters({ priceRange: value as [number, number] })}
+              onValueChange={(value) =>
+                updateFilters({ priceRange: value as [number, number] })
+              }
               max={100}
               min={0}
               step={5}
@@ -129,9 +169,14 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
             <Checkbox
               id="in-stock"
               checked={filters.inStock}
-              onCheckedChange={(checked) => updateFilters({ inStock: checked as boolean })}
+              onCheckedChange={(checked) =>
+                updateFilters({ inStock: checked as boolean })
+              }
             />
-            <Label htmlFor="in-stock" className="text-sm font-normal cursor-pointer">
+            <Label
+              htmlFor="in-stock"
+              className="text-sm font-normal cursor-pointer"
+            >
               In Stock Only
             </Label>
           </div>
@@ -144,9 +189,14 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
             <Checkbox
               id="featured"
               checked={filters.featured}
-              onCheckedChange={(checked) => updateFilters({ featured: checked as boolean })}
+              onCheckedChange={(checked) =>
+                updateFilters({ featured: checked as boolean })
+              }
             />
-            <Label htmlFor="featured" className="text-sm font-normal cursor-pointer">
+            <Label
+              htmlFor="featured"
+              className="text-sm font-normal cursor-pointer"
+            >
               Featured Products
             </Label>
           </div>
@@ -158,10 +208,14 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
             <h3 className="font-medium">Active Filters</h3>
             <div className="flex flex-wrap gap-2">
               {filters.categories.map((categoryId) => {
-                const category = categories.find((c) => c.id === categoryId)
+                const category = categories.find((c) => c.id === categoryId);
                 return (
-                  <Badge key={categoryId} variant="secondary" className="text-xs">
-                    {category?.label}
+                  <Badge
+                    key={categoryId}
+                    variant="secondary"
+                    className="text-xs"
+                  >
+                    {category?.name}
                     <button
                       onClick={() => handleCategoryChange(categoryId, false)}
                       className="ml-1 hover:text-destructive"
@@ -169,7 +223,7 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
-                )
+                );
               })}
               {(filters.priceRange[0] > 0 || filters.priceRange[1] < 100) && (
                 <Badge variant="secondary" className="text-xs">
@@ -191,5 +245,5 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

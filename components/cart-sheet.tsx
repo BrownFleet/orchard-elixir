@@ -1,34 +1,45 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { ShoppingCart, Plus, Minus, X, ShoppingBag } from "lucide-react"
-import { useCart } from "@/hooks/use-cart"
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/ui/sheet";
+import { Badge } from "@/ui/badge";
+import { Separator } from "@/ui/separator";
+import { ShoppingCart, Plus, Minus, X, ShoppingBag } from "lucide-react";
+import { useCart } from "@/hooks/use-cart";
 
 interface CartSheetProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export function CartSheet({ children }: CartSheetProps) {
-  const [open, setOpen] = useState(false)
-  const { items, loading, totalItems, totalPrice, updateQuantity, removeItem } = useCart()
+  const [open, setOpen] = useState(false);
+  const { items, loading, totalItems, totalPrice, updateQuantity, removeItem } =
+    useCart();
 
-  const handleQuantityChange = async (itemId: string, currentQuantity: number, change: number) => {
-    const newQuantity = currentQuantity + change
+  const handleQuantityChange = async (
+    itemId: string,
+    currentQuantity: number,
+    change: number
+  ) => {
+    const newQuantity = currentQuantity + change;
     if (newQuantity > 0) {
-      await updateQuantity(itemId, newQuantity)
+      await updateQuantity(itemId, newQuantity);
     }
-  }
+  };
 
   const handleRemoveItem = async (itemId: string) => {
-    await removeItem(itemId)
-  }
+    await removeItem(itemId);
+  };
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -42,8 +53,7 @@ export function CartSheet({ children }: CartSheetProps) {
           )}
         </div>
       </SheetTrigger>
-
-      <SheetContent className="w-full sm:max-w-lg">
+      <SheetContent className="w-full sm:max-w-lg bg-white/95 backdrop-blur-lg">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <ShoppingCart className="h-5 w-5" />
@@ -61,7 +71,9 @@ export function CartSheet({ children }: CartSheetProps) {
               <ShoppingBag className="h-16 w-16 text-muted-foreground" />
               <div className="text-center space-y-2">
                 <h3 className="font-semibold">Your cart is empty</h3>
-                <p className="text-sm text-muted-foreground">Add some products to get started</p>
+                <p className="text-sm text-muted-foreground">
+                  Add some products to get started
+                </p>
               </div>
               <Button onClick={() => setOpen(false)} asChild>
                 <Link href="/products">Continue Shopping</Link>
@@ -83,7 +95,9 @@ export function CartSheet({ children }: CartSheetProps) {
 
                     <div className="flex-1 space-y-2">
                       <div className="flex justify-between">
-                        <h4 className="font-medium text-sm leading-tight">{item.product?.name}</h4>
+                        <h4 className="font-medium text-sm leading-tight">
+                          {item.product?.name}
+                        </h4>
                         <Button
                           variant="ghost"
                           size="icon"
@@ -100,7 +114,9 @@ export function CartSheet({ children }: CartSheetProps) {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8"
-                            onClick={() => handleQuantityChange(item.id, item.quantity, -1)}
+                            onClick={() =>
+                              handleQuantityChange(item.id, item.quantity, -1)
+                            }
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
@@ -109,7 +125,9 @@ export function CartSheet({ children }: CartSheetProps) {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8"
-                            onClick={() => handleQuantityChange(item.id, item.quantity, 1)}
+                            onClick={() =>
+                              handleQuantityChange(item.id, item.quantity, 1)
+                            }
                           >
                             <Plus className="h-3 w-3" />
                           </Button>
@@ -117,10 +135,16 @@ export function CartSheet({ children }: CartSheetProps) {
 
                         <div className="text-right">
                           <div className="font-medium text-sm">
-                            €{((item.product?.price_eur || 0) * item.quantity).toFixed(2)}
+                            €
+                            {(
+                              (item.product?.price_eur || 0) * item.quantity
+                            ).toFixed(2)}
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            ₹{((item.product?.price_inr || 0) * item.quantity).toFixed(0)}
+                            ₹
+                            {(
+                              (item.product?.price_inr || 0) * item.quantity
+                            ).toFixed(0)}
                           </div>
                         </div>
                       </div>
@@ -137,15 +161,26 @@ export function CartSheet({ children }: CartSheetProps) {
                   <span>Total</span>
                   <div className="text-right">
                     <div>€{totalPrice.eur.toFixed(2)}</div>
-                    <div className="text-sm text-muted-foreground font-normal">₹{totalPrice.inr.toFixed(0)}</div>
+                    <div className="text-sm text-muted-foreground font-normal">
+                      ₹{totalPrice.inr.toFixed(0)}
+                    </div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Button className="w-full" onClick={() => setOpen(false)} asChild>
+                  <Button
+                    className="w-full"
+                    onClick={() => setOpen(false)}
+                    asChild
+                  >
                     <Link href="/checkout">Proceed to Checkout</Link>
                   </Button>
-                  <Button variant="outline" className="w-full bg-transparent" onClick={() => setOpen(false)} asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full bg-transparent"
+                    onClick={() => setOpen(false)}
+                    asChild
+                  >
                     <Link href="/cart">View Cart</Link>
                   </Button>
                 </div>
@@ -155,5 +190,5 @@ export function CartSheet({ children }: CartSheetProps) {
         </div>
       </SheetContent>
     </Sheet>
-  )
+  );
 }

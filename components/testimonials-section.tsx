@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/ui/card"
+import { Button } from "@/ui/button"
 import { Star, ChevronLeft, ChevronRight } from "lucide-react"
 
 const testimonials = [
@@ -48,7 +48,7 @@ export function TestimonialsSection() {
   }
 
   return (
-    <section className="py-16 bg-background">
+    <section className="py-16 bg-background flex flex-col items-center justify-center">
       <div className="container px-4">
         <div className="text-center space-y-4 mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-balance">What Our Customers Say</h2>

@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Button } from "@/ui/button"
+import { Card, CardContent } from "@/ui/card"
+import { Badge } from "@/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs"
 import { Star, Heart, ShoppingCart, Minus, Plus, Share, Truck, Shield, RotateCcw } from "lucide-react"
 import type { Product } from "@/lib/types"
 
