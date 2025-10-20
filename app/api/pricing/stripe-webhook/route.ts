@@ -1,11 +1,9 @@
-
-
-export const runtime = "nodejs";
-
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@/lib/supabase/client";
 import { getStripeClient } from "@/lib/stripe";
+
+export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   const supabase = createClient();
