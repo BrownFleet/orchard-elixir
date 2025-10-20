@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { CheckCircle } from "lucide-react";
+import { useCart } from "@/hooks/use-cart";
 
 interface SessionData {
   orderId: string;
@@ -17,6 +18,7 @@ interface SessionData {
 export default function OrderConfirmationPage() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
+    const { clearCart } = useCart();
 
   const [session, setSession] = useState<SessionData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -50,6 +52,12 @@ export default function OrderConfirmationPage() {
       </div>
     );
   }
+
+   useEffect(() => {
+    if (session) {
+      clearCart(); 
+    }
+  }, [session]);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
